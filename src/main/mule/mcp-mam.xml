@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xsi:schemaLocation="
+          http://www.mulesoft.org/schema/mule/core
+          http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+          http://www.mulesoft.org/schema/mule/http
+          http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+    <!-- HTTP Listener Config -->
+    <http:listener-config name="HTTP_Listener_config">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" />
+    </http:listener-config>
+
+    <!-- Main Flow -->
+    <flow name="mcp-mam-main-flow">
+        <http:listener config-ref="HTTP_Listener_config" path="/api/*" />
+        <logger level="INFO" message="Request received: #[attributes.requestPath]" />
+        <set-payload value="{
+            &quot;status&quot;: &quot;success&quot;,
+            &quot;message&quot;: &quot;Welcome to MCP MAM API&quot;,
+            &quot;path&quot;: &quot;#[attributes.requestPath]&quot;
+        }" mimeType="application/json" />
+    </flow>
+
+    <!-- Health Check Flow -->
+    <flow name="mcp-mam-health-flow">
+        <http:listener config-ref="HTTP_Listener_config" path="/health" />
+        <set-payload value="{ &quot;status&quot;: &quot;UP&quot; }" mimeType="application/json" />
+    </flow>
+
+</mule>
