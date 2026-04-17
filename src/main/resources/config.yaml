@@ -1,0 +1,6 @@
+http:
+  port: "8081"
+
+api:
+  name: "mcp-mam"
+  version: "v1"
